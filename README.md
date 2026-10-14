@@ -1,1 +1,64 @@
 # ECA08-ADC
+clc;
+clear;
+close all;
+
+% Parameters
+Am = 1;              % Message signal amplitude
+Ac = 2;              % Carrier signal amplitude
+fm = 100;            % Message frequency (Hz)
+fc = 1000;           % Carrier frequency (Hz)
+fs = 10000;          % Sampling frequency (Hz)
+mu = 0.5;            % Modulation index
+
+% Time axis
+t = 0:1/fs:0.05;
+
+% Message Signal
+m = Am * cos(2*pi*fm*t);
+
+% Carrier Signal
+c = Ac * cos(2*pi*fc*t);
+
+% AM Signal
+s = Ac * (1 + mu*cos(2*pi*fm*t)) .* cos(2*pi*fc*t);
+
+% AM Detection using Envelope Detector
+detected = abs(hilbert(s));
+
+% Remove DC component and recover message
+recovered = detected - mean(detected);
+
+% Plot Message Signal
+figure;
+
+subplot(4,1,1);
+plot(t,m);
+title('Message Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+grid on;
+
+% Plot Carrier Signal
+subplot(4,1,2);
+plot(t,c);
+title('Carrier Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+grid on;
+
+% Plot AM Signal
+subplot(4,1,3);
+plot(t,s);
+title('Amplitude Modulated Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+grid on;
+
+% Plot Detected Signal
+subplot(4,1,4);
+plot(t,recovered);
+title('Detected / Demodulated Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+grid on;
